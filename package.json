@@ -1,0 +1,17 @@
+{
+  "name": "@wdang/dom",
+  "version": "1.0.0",
+  "type":"module",
+  "description": "Commonly used HTML/DOM code",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wdang/wdang.dom.git"
+  },
+  "author": "William Dang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wdang/wdang.dom/issues"
+  },
+  "homepage": "https://github.com/wdang/wdang.dom#readme"
+}
