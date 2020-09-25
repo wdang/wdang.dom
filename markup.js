@@ -7,6 +7,7 @@
  */
 const markup = (tag) => (propsOrClassnames = {}, ...args) => {
     const element = document.createElement(tag);
+    propsOrClassnames = propsOrClassnames || {};
 
     // set attributes
     if (Array.isArray(propsOrClassnames))
