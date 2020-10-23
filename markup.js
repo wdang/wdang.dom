@@ -1,31 +1,33 @@
-const EMPTY_OBJECT = Object.assign(Object.create(null), {});
-const el = (tag, propsOrClassnames = EMPTY_OBJECT, ...childrenOrTextContent) => {
+const el = (tag, attrsOrClassnames = {}, ...childrenOrTextContent) => {
+    // custom components as tag
+    if (typeof tag === "function") return tag();
+
     const element = document.createElement(tag);
-    const attrs = propsOrClassnames || {};
-    if (Array.isArray(attrs))
-        element.setAttribute("class", attrs.join(" "));
-    else if (typeof(attrs) === "string")
-        element.setAttribute("class", attrs);
-    else if (typeof(attrs) === "object") {
-        for (let [key, value] of Object.entries(attrs)) {
-            if (key.startsWith('on'))
-                element.addEventListener(key.slice(2).toLowerCase(), value, false);
-            else
-                element.setAttribute(key, String(value));
-        }
-    }
-    const children = childrenOrTextContent.flat(Infinity);
-    for (let child of children) {
-        if (typeof child === "string")
-            element.appendChild(document.createTextNode(child));
-        else if (child instanceof HTMLElement)
-            element.appendChild(child)
+    // assign attributes
+    attrsOrClassnames = attrsOrClassnames || {};
+    if (typeof attrsOrClassnames === "string")
+        element.setAttribute("class", attrsOrClassnames);
+    else
+        Object.assign(element, attrsOrClassnames);
+
+
+    // append children
+    const frag = document.createDocumentFragment();
+    for (let child of childrenOrTextContent) {
+        if (child instanceof HTMLElement)
+            frag.appendChild(child)
+        else if (typeof child === "string" || typeof child === "number")
+            frag.appendChild(document.createTextNode(child));
+        else if (typeof child === "function")
+            frag.appendChild(child())
         else
-            console.error(`Cannot add this as child element: `);
+            console.error('Cannot append child element:', child);
     }
+
+    element.appendChild(frag);
     return element;
 }
-const markup = (tag) => (props, ...args) => el(tag, props, ...args);
+const markup = (tag) => (attrs, ...args) => el(tag, attrs, ...args);
 export const a = markup("a");
 export const abbr = markup("abbr");
 export const address = markup("address");
